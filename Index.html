@@ -18,6 +18,21 @@ input,select,textarea{box-sizing:border-box;width:100%;padding:12px;margin:8px 0
 .order{width:100%;margin-top:10px}
 </style>
 </head>
+  
+<link rel="manifest" href="./manifest.json">
+
+<meta name="theme-color" content="#741c13">
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("App ready"))
+      .catch((error) => console.error("App error:", error));
+  });
+}
+</script>
+
 <body>
 <header>
 <h1>🍛 Shahi Sawad</h1>
