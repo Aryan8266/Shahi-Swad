@@ -1,0 +1,12 @@
+
+{
+  "name": "Shahi Sawad",
+  "short_name": "Shahi Sawad",
+  "description": "Order delicious food from Shahi Sawad",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#8b0000",
+  "orientation": "portrait"
+}
