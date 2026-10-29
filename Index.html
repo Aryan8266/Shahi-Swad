@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shahi Sawad Restaurant</title>
+<style>
+body{margin:0;font-family:Arial;background:#fff8ed;color:#321b12}
+header{background:#741c13;color:white;text-align:center;padding:24px}
+h1{margin:0;font-size:32px}
+.hero{text-align:center;padding:25px 12px;background:#f5dfb9}
+button{background:#741c13;color:white;border:0;padding:12px;border-radius:8px;cursor:pointer}
+main{max-width:700px;margin:auto;padding:16px}
+.item{background:white;padding:14px;margin:12px 0;border-radius:12px;box-shadow:0 2px 8px #ddd}
+.price{font-weight:bold;color:#741c13}
+input,select,textarea{box-sizing:border-box;width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:6px}
+.order{width:100%;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+<h1>🍛 Shahi Sawad</h1>
+<p>स्वाद जो दिल जीत ले!</p>
+<p>Fresh Food • Delivery • Takeaway</p>
+</header>
+<div class="hero">
+<h2>स्वादिष्ट खाना आपके घर!</h2>
+<p>Order Online | ऑनलाइन ऑर्डर करें</p>
+<button onclick="document.getElementById('menu').scrollIntoView()">View Menu</button>
+</div>
+<main>
+<h2 id="menu">Our Menu / हमारा मेन्यू</h2>
+<p>Demo prices — apne asli menu ke hisaab se badalna.</p>
+<div id="items"></div>
+<h2>Your Cart / आपकी टोकरी</h2>
+<div id="cart">Cart empty</div>
+<h3 id="total">Total: ₹0</h3>
+<button onclick="clearCart()">Clear Cart</button>
+<h2>Order Details</h2>
+<form id="form">
+<input id="name" placeholder="Your Name / नाम" required>
+<input id="phone" placeholder="Mobile Number" type="tel" pattern="[0-9]{10}" required>
+<select id="type">
+<option>Home Delivery</option>
+<option>Takeaway</option>
+</select>
+<textarea id="address" placeholder="Delivery Address"></textarea>
+<select id="payment">
+<option>Cash on Delivery</option>
+<option>UPI QR Payment</option>
+</select>
+<button class="order" type="submit">Order on WhatsApp</button>
+</form>
+<p id="msg"></p>
+</main>
+<script>
+const menu=[
+{name:"Paneer Butter Masala",price:220},
+{name:"Butter Chicken",price:280},
+{name:"Dal Makhani",price:180},
+{name:"Veg Biryani",price:160},
+{name:"Chicken Biryani",price:240},
+{name:"Butter Naan",price:35}
+];
+let cart=[];
+function showMenu(){
+document.getElementById("items").innerHTML=menu.map((x,i)=>
+`<div class="item"><h3>${x.name}</h3>
+<p class="price">₹${x.price}</p>
+<button onclick="add(${i})">Add to Cart +</button></div>`
+).join("");
+}
+function add(i){
+let x=cart.find(y=>y.name===menu[i].name);
+if(x)x.qty++;else cart.push({...menu[i],qty:1});
+showCart();
+}
+function showCart(){
+document.getElementById("cart").innerHTML=cart.length?
+cart.map((x,i)=>`${x.name} × ${x.qty} — ₹${x.price*x.qty} <button onclick="removeItem(${i})">−</button>`).join("<br>"):"Cart empty";
+document.getElementById("total").textContent="Total: ₹"+cart.reduce((s,x)=>s+x.price*x.qty,0);
+}
+function removeItem(i){
+cart[i].qty--;
+if(cart[i].qty===0)cart.splice(i,1);
+showCart();
+}
+function clearCart(){cart=[];showCart();}
+document.getElementById("form").onsubmit=function(e){
+e.preventDefault();
+if(!cart.length){alert("Pehle food item add karo");return;}
+const number="91XXXXXXXXXX";
+if(number.includes("X")){
+document.getElementById("msg").textContent="WhatsApp connect karne ke liye restaurant ka number code mein set karna baaki hai.";
+return;
+}
+let msg="SHahi Sawad Order\nName: "+document.getElementById("name").value+
+"\nPhone: "+document.getElementById("phone").value+
+"\nItems: "+cart.map(x=>x.name+" x "+x.qty).join(", ")+
+"\nTotal: ₹"+cart.reduce((s,x)=>s+x.price*x.qty,0)+
+"\nOrder Type: "+document.getElementById("type").value+
+"\nAddress: "+document.getElementById("address").value+
+"\nPayment: "+document.getElementById("payment").value;
+window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank");
+};
+showMenu();
+showCart();
+</script>
+</body>
+</html>
