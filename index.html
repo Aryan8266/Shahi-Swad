@@ -421,10 +421,37 @@
 
       message += `\nPlease confirm this order.`;
 
-      const url = "https://wa.me/" + RESTAURANT_WHATSAPP +
-                  "?text=" + encodeURIComponent(message);
+      const orderData = {
+  customer_name: name,
+  phone: phone,
+  address: address,
+  order_type: type,
+  items: selected.map(food => ({
+    name: food.name,
+    price: food.price,
+    quantity: cart[food.id]
+  })),
+  total: total,
+  payment_method: payment,
+  status: "New"
+};
 
-      window.open(url, "_blank");
+db.from("orders")
+  .insert([orderData])
+  .select()
+  .then(({ data, error }) => {
+    if (error) {
+      console.error("Order save error:", error);
+      alert("Order save nahi hua: " + error.message);
+      return;
+    }
+
+    const url = "https://wa.me/" + RESTAURANT_WHATSAPP +
+                "?text=" + encodeURIComponent(message);
+
+    window.open(url, "_blank");
+    alert("Order successfully save ho gaya!");
+  });
     }
 
     renderMenu();
